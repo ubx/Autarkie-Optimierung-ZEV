@@ -1,7 +1,7 @@
 # Ersparnisse in einem ZEV in abhängigkeit der Batteriegrösse
 
 
-Berechnungen von möglichen Ersparnissen aus historischen Daten (Zeitreihen) in einem ZEV (Zusammenschluss zum Eigenverbrauch) \
+Berechnungen von möglichen Ersparnissen aus historischen Daten (Zeitreihen) in einem ZEV (Zusammenschluss zum Eigenverbrauch)
 in Abhängigkeit von variablen Faktoren:
 
 1. Batteriegrösse (Kapazität in kWh)
