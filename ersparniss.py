@@ -27,21 +27,16 @@ timserie_lieferung, timeserie_betzg = get_timserie(file_path, sheet_name)
 tarif_bezung = 0.221  # Tarif für Bezug in CHF/kWh
 tarif_eigenverbrauchh = tarif_bezung * 0.8  # Tarif für Strom aus Batterie im ZEV in CHF/kWh
 tarif_lieferung = 0.08  # Tarif für Lieferung in CHF/kWh
-batterie_max_cap = 5.0  # Maximale Kapazität der Batterie in kWh
+batterie_max_cap = 1.0  # Maximale Kapazität der Batterie in kWh
+ersparnisse = 0.0
 
-# Ersparnisse berechnen
-ersparnisse = berechne_ersparniss(timserie_lieferung, timeserie_betzg, tarif_eigenverbrauchh, tarif_lieferung,
-                                  batterie_max_cap)
-print(f"Ersparnis: {ersparnisse :.2f} CHF mit {batterie_max_cap:.0f} kWh Batterie")
-
-# Evaluate the optimale battery capacity
+# Ersparnisse berechnen, evaluate the optimale battery capacity
 while True:
-    batterie_max_cap += 1.0
     opt_ersparnisse = berechne_ersparniss(timserie_lieferung, timeserie_betzg, tarif_eigenverbrauchh, tarif_lieferung,
                                           batterie_max_cap)
     if opt_ersparnisse > ersparnisse:
         ersparnisse = opt_ersparnisse
         print(f"Ersparnis: {opt_ersparnisse :.2f} CHF mit {batterie_max_cap:.0f} kWh Batterie")
+        batterie_max_cap += 1.0
     else:
-        print(f"Maximale Ersparnis: {opt_ersparnisse :.2f} CHF mit {batterie_max_cap:.0f} kWh Batterie")
         break
