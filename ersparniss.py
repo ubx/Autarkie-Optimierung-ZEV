@@ -23,7 +23,7 @@ def berechne_ersparniss(timeserie_bezug, timeserie_lieferung, tarif_eigenverbrau
 
 file_path = 'data/2-weg-messpunkt.xlsx'  ## Bezung und Lieferung
 sheet_name = 'tab1'
-timserie_lieferung, timeserie_betzg = get_timserie(file_path, sheet_name)
+timserie_lieferung, timeserie_bezug, _ = get_timserie(file_path, sheet_name)
 
 tarif_bezung = 0.221  # Tarif für Bezug in CHF/kWh
 tarif_eigenverbrauchh = tarif_bezung * 0.8  # Tarif für Strom aus Batterie im ZEV in CHF/kWh
@@ -34,7 +34,7 @@ ersparnisse = 0.0
 # Ersparnisse berechnen
 # todo -- Consider charging and discharging losses
 while True:
-    opt_ersparnisse = berechne_ersparniss(timserie_lieferung, timeserie_betzg, tarif_eigenverbrauchh, tarif_lieferung,
+    opt_ersparnisse = berechne_ersparniss(timserie_lieferung, timeserie_bezug, tarif_eigenverbrauchh, tarif_lieferung,
                                           batterie_max_cap)
     if opt_ersparnisse > ersparnisse:
         ersparnisse = opt_ersparnisse
