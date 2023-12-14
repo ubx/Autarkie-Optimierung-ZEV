@@ -13,7 +13,7 @@ def berechne_ersparniss(timeserie_bezug, timeserie_lieferung, tarif_eigenverbrau
             ersparniss -= lieferung * tarif_lieferung
 
         # Wenn die Batterie entlädt, nutze sie zum Netzbezug
-        elif bezug > 0 and batterie_current_cap > batterie_min_cap:
+        if bezug > 0 and batterie_current_cap > batterie_min_cap:
             batterie_current_cap -= bezug
             ersparniss += bezug * (tarif_eigenverbrauchh)  ## todo -- without battery charge losses!!
 
@@ -27,8 +27,8 @@ timserie_lieferung, timeserie_betzg = get_timserie(file_path, sheet_name)
 tarif_bezung = 0.221  # Tarif für Bezug in CHF/kWh
 tarif_eigenverbrauchh = tarif_bezung * 0.8  # Tarif für Strom aus Batterie im ZEV in CHF/kWh
 tarif_lieferung = 0.08  # Tarif für Lieferung in CHF/kWh
-
 batterie_max_cap = 5.0  # Maximale Kapazität der Batterie in kWh
+
 # Ersparnisse berechnen
 ersparnisse = berechne_ersparniss(timserie_lieferung, timeserie_betzg, tarif_eigenverbrauchh, tarif_lieferung,
                                   batterie_max_cap)
