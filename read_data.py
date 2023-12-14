@@ -14,7 +14,6 @@ def get_timserie(file_path, sheet_name):
     data_list = read_excel_data(file_path, sheet_name)
     last_bezung = 0.0
     last_lieferung = 0.0
-    last_timestamp = 0
     for row in data_list:
         if last_bezung > 0.0:
             current_bezug = (row[1] - last_bezung)
