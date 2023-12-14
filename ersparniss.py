@@ -3,19 +3,20 @@ from read_data import get_timserie
 
 def berechne_ersparniss(timeserie_bezug, timeserie_lieferung, tarif_eigenverbrauchh, tarif_lieferung, batterie_max_cap):
     ersparniss = 0.0
-    batterie_min_cap = 0.0  # Minimale Kapazität der Batterie in kWh
-    batterie_current_cap = batterie_max_cap  # Aktuelle Kapazität der Batterie
+    batterie_cur_cap = 0.0  # Aktuelle Kapazität der Batterie
 
     for bezug, lieferung in zip(timeserie_bezug, timeserie_lieferung):
         # Überprüfe, ob die Batterie Energie aufnehmen kann
-        if lieferung > 0 and batterie_current_cap < batterie_max_cap:  ## todo -- this may overload the battery!!
-            batterie_current_cap += lieferung
-            ersparniss -= lieferung * tarif_lieferung
+        if lieferung > 0.0:
+            lc = batterie_cur_cap
+            batterie_cur_cap += min(lieferung, batterie_max_cap - batterie_cur_cap)
+            ersparniss -= (batterie_cur_cap - lc) * tarif_lieferung
 
-        # Wenn die Batterie entlädt, nutze sie zum Netzbezug
-        if bezug > 0 and batterie_current_cap > batterie_min_cap:
-            batterie_current_cap -= bezug
-            ersparniss += bezug * (tarif_eigenverbrauchh)  ## todo -- without battery charge losses!!
+        # Wenn die Batterie entlädt, nutze sie zum Eigenverbrauch
+        if bezug > 0.0:
+            lc = batterie_cur_cap
+            batterie_cur_cap -= min(bezug, batterie_cur_cap)
+            ersparniss += (lc - batterie_cur_cap) * tarif_eigenverbrauchh
 
     return ersparniss
 
@@ -30,7 +31,8 @@ tarif_lieferung = 0.08  # Tarif für Lieferung in CHF/kWh
 batterie_max_cap = 1.0  # Maximale Kapazität der Batterie in kWh
 ersparnisse = 0.0
 
-# Ersparnisse berechnen, evaluate the optimale battery capacity
+# Ersparnisse berechnen
+# todo -- Consider charging and discharging losses
 while True:
     opt_ersparnisse = berechne_ersparniss(timserie_lieferung, timeserie_betzg, tarif_eigenverbrauchh, tarif_lieferung,
                                           batterie_max_cap)
