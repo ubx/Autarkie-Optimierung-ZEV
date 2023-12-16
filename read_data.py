@@ -11,6 +11,7 @@ def read_excel_data(file_path, sheet_name):
 def get_timserie(file_path, sheet_name):
     timserie_bezug = []
     timserie_lieferung = []
+    timserie_ts = []
     data_list = read_excel_data(file_path, sheet_name)
     last_bezung = 0.0
     last_lieferung = 0.0
@@ -20,9 +21,10 @@ def get_timserie(file_path, sheet_name):
             current_ieferung = (row[2] - last_lieferung)
             timserie_bezug.append(current_bezug)
             timserie_lieferung.append(current_ieferung)
+            timserie_ts.append(row[0])
         last_bezung = row[1]
         last_lieferung = row[2]
-    return timserie_lieferung, timserie_bezug
+    return timserie_lieferung, timserie_bezug, timserie_ts
 
 
 if __name__ == '__main__':
