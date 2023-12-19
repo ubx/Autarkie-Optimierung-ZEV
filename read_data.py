@@ -1,4 +1,3 @@
-import locale
 import sys
 
 import pandas as pd
@@ -34,7 +33,7 @@ def get_timserie(file_path, sheet_name):
 
 if __name__ == '__main__':
 
-    def read_from_excel(file_path, sheet_name):
+    def read_from_excel(file_path, sheet_name, print_time_diff=None):
         data_list = read_excel_data(file_path, sheet_name)
         last_bezung = 0.0
         last_lieferung = 0.0
@@ -42,7 +41,6 @@ if __name__ == '__main__':
         max_lieferung_pwr = 0.0
         max_period = 0.0
         last_timestamp = 0
-        locale.setlocale(locale.LC_TIME, 'de_CH.UTF-8')
 
         for row in data_list:
             if last_bezung > 0.0:
@@ -54,8 +52,9 @@ if __name__ == '__main__':
                 max_lieferung_pwr = max(max_lieferung_pwr, current_ieferung * per_periode)
                 max_period = max(max_period, periode)
                 ts = row[0]
-                print(
-                    f"Zeit: {ts.day:02d}.{ts.month:02d}.{ts.year} {ts.hour:02d}:{ts.minute:02d}:{ts.second:02d} Bezug: {current_bezug :.3f} [kWh] Lieferung: {current_ieferung :.3f} [kWh]  ZeitDiff: {periode}")
+                if print_time_diff is None or periode > 1000.0:
+                    print(f"Zeit: {ts.day:02d}.{ts.month:02d}.{ts.year} {ts.hour:02d}:{ts.minute:02d}:{ts.second:02d} "
+                          f"Bezug: {current_bezug :.3f} [kWh] Lieferung: {current_ieferung :.3f} [kWh]  ZeitDiff: {periode}")
             last_timestamp = row[0]
             last_bezung = row[1]
             last_lieferung = row[2]
@@ -64,7 +63,8 @@ if __name__ == '__main__':
 
 
     file_path = sys.argv[1] if len(sys.argv) > 1 else "data/2-weg-messpunkt.xlsx"
-    sheet_name = sys.argv[2] if len(sys.argv) > 1 else "tab1"
+    sheet_name = sys.argv[2] if len(sys.argv) > 2 else "tab1"
+    print_time_diff = float(sys.argv[3]) if len(sys.argv) > 3 else None
 
     print(f"Data for {file_path}")
-    read_from_excel(file_path, sheet_name)
+    read_from_excel(file_path, sheet_name, print_time_diff)
