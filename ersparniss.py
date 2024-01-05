@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 
 def berechne_ersparniss(timeserie_bezug, timeserie_lieferung, tarif_bezug, tarif_lieferung, batterie_max_cap):
@@ -21,8 +22,18 @@ def berechne_ersparniss(timeserie_bezug, timeserie_lieferung, tarif_bezug, tarif
     return ersparniss, batterie_cur_cap * tarif_bezug
 
 
+def von_bis(begin, end):
+    return (
+        f"von: {begin.day:02d}.{begin.month:02d}.{begin.year} {begin.hour:02d}:{begin.minute:02d}:{begin.second:02d}"
+        f" bis {end.day:02d}.{end.month:02d}.{end.year} {end.hour:02d}:{end.minute:02d}:{end.second:02d}")
+
+
 if __name__ == '__main__':
     provider = sys.argv[1] if len(sys.argv) > 1 else "bkw"
+    format_string = "%d.%m.%Y %H:%M:%S"
+    begin_time = datetime.strptime(sys.argv[2], format_string) if len(sys.argv) > 2 else None
+    end_time = datetime.strptime(sys.argv[3], format_string) if len(sys.argv) > 3 else None
+
     if provider == "bkw":
         from read_data_bkw import get_timserie as timeserie
 
@@ -38,12 +49,20 @@ if __name__ == '__main__':
         sheet_name1 = None
 
     timesrie_lieferung, timeserie_bezug, timeserie_ts = timeserie(file_path, sheet_name0, sheet_name1)
+
     tarif_bezung = 0.3027  # Tarif für Bezug in CHF/kWh 2024 (https://www.strompreis.elcom.admin.ch/?category=H3)
     tarif_lieferung = 0.0824  # Tarif für Lieferung in CHF/kWh, 2023 (4.Q) mit HKN
     batterie_max_cap = 1.0  # Maximale Kapazität der Batterie in kWh
     ersparnisse = 0.0
 
-    print(f"Data from: {provider}")
+    idx_begin = 0 if begin_time is None else min((i for i, val in enumerate(timeserie_ts) if val >= begin_time),
+                                                 default=None)
+    idx_end = -1 if end_time is None else max((i for i, val in enumerate(timeserie_ts) if val <= end_time),
+                                              default=None)
+    timesrie_lieferung = timesrie_lieferung[idx_begin:idx_end]
+    timeserie_bezug = timeserie_bezug[idx_begin:idx_end]
+
+    print(f"Data from: {provider} / {von_bis(timeserie_ts[idx_begin], timeserie_ts[idx_end])}")
     # Ersparnisse berechnen
     # todo -- Consider charging and discharging losses
     while True:
