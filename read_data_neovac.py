@@ -12,7 +12,7 @@ def read_excel_data(file_path, sheet_name):
         print(f"An error occurred: {e}")
 
 
-def get_timserie(file_path, sheet_name):
+def get_timserie(file_path, sheet_name, sheet_name_dummy=None):
     timserie_bezug = []
     timserie_lieferung = []
     timserie_ts = []

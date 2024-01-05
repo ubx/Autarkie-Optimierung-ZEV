@@ -1,4 +1,4 @@
-from read_data_neovac import get_timserie as timeserie
+import sys
 
 
 def berechne_ersparniss(timeserie_bezug, timeserie_lieferung, tarif_bezug, tarif_lieferung, batterie_max_cap):
@@ -21,24 +21,40 @@ def berechne_ersparniss(timeserie_bezug, timeserie_lieferung, tarif_bezug, tarif
     return ersparniss, batterie_cur_cap * tarif_bezug
 
 
-file_path = 'data/2-weg-messpunkt.xlsx'  ## Bezung und Lieferung
-sheet_name = 'tab1'
-timesrie_lieferung, timeserie_bezug, timeserie_ts = timeserie(file_path, sheet_name)
+if __name__ == '__main__':
+    provider = sys.argv[1] if len(sys.argv) > 1 else "bkw"
+    if provider == "bkw":
+        from read_data_bkw import get_timserie as timeserie
 
-tarif_bezung = 0.3027  # Tarif für Bezug in CHF/kWh 2024 (https://www.strompreis.elcom.admin.ch/?category=H3)
-tarif_lieferung = 0.0824  # Tarif für Lieferung in CHF/kWh, 2023 (4.Q) mit HKN
-batterie_max_cap = 1.0  # Maximale Kapazität der Batterie in kWh
-ersparnisse = 0.0
-
-# Ersparnisse berechnen
-# todo -- Consider charging and discharging losses
-while True:
-    opt_ersparnisse, rest = berechne_ersparniss(timesrie_lieferung, timeserie_bezug, tarif_bezung, tarif_lieferung,
-                                                batterie_max_cap)
-    total_ersparnis = opt_ersparnisse + rest
-    if total_ersparnis > ersparnisse:
-        ersparnisse = total_ersparnis
-        print(f"Total Ersparnis: {total_ersparnis:.2f} / Rest {rest:.2f} CHF mit {batterie_max_cap:.0f} kWh Batterie")
-        batterie_max_cap += 1.0
+        file_path = 'data/Werte Eggenstrasse  3 Walperswil.xlsx'  ## Bezung und Lieferung
+        sheet_name0 = 'Einspeisung Überschuss'
+        sheet_name1 = 'Strombezug aus BKW-Netz'
     else:
-        break
+        ## neovac
+        from read_data_neovac import get_timserie as timeserie
+
+        file_path = 'data/2-weg-messpunkt.xlsx'  ## Bezung und Lieferung
+        sheet_name0 = 'tab1'
+        sheet_name1 = None
+
+    timesrie_lieferung, timeserie_bezug, timeserie_ts = timeserie(file_path, sheet_name0, sheet_name1)
+    tarif_bezung = 0.3027  # Tarif für Bezug in CHF/kWh 2024 (https://www.strompreis.elcom.admin.ch/?category=H3)
+    tarif_lieferung = 0.0824  # Tarif für Lieferung in CHF/kWh, 2023 (4.Q) mit HKN
+    batterie_max_cap = 1.0  # Maximale Kapazität der Batterie in kWh
+    ersparnisse = 0.0
+
+    print(f"Data from: {provider}")
+    # Ersparnisse berechnen
+    # todo -- Consider charging and discharging losses
+    while True:
+        opt_ersparnisse, rest = berechne_ersparniss(timesrie_lieferung, timeserie_bezug, tarif_bezung, tarif_lieferung,
+                                                    batterie_max_cap)
+        total_ersparnis = opt_ersparnisse + rest
+        if total_ersparnis > ersparnisse:
+            ersparnisse = total_ersparnis
+            print(
+                f"Total Ersparnis: {total_ersparnis:.2f} / Rest {rest:.2f} CHF mit {batterie_max_cap:.0f} kWh Batterie"
+                f"  (Ersparnis/kWh {total_ersparnis / batterie_max_cap:.2f})")
+            batterie_max_cap += 1.0
+        else:
+            break
