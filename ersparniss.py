@@ -63,7 +63,8 @@ if __name__ == '__main__':
     timeserie_bezug = timeserie_bezug[idx_begin:idx_end]
 
     print(f"Data from: {provider} / {von_bis(timeserie_ts[idx_begin], timeserie_ts[idx_end])}")
-    # Ersparnisse berechnen
+    print(f"Total Bezug: {sum(timeserie_bezug):.2f} kWh / Total Lieferung: {sum(timesrie_lieferung):.2f} kWh")
+
     # todo -- Consider charging and discharging losses
     while True:
         opt_ersparnisse, rest = berechne_ersparniss(timesrie_lieferung, timeserie_bezug, tarif_bezung, tarif_lieferung,
