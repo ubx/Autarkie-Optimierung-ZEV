@@ -6,7 +6,7 @@ in Abhängigkeit von variablen Faktoren:
 
 1. Batteriegrösse (Kapazität in kWh)
 2. Netztarif (Energie Bezug in CHF/kWh) 
-3. Tarif Eigenverbrauch (Verkauf an ZEV Teilnehmer in CHF/kWh)
+3. Einspeisevergütung (Energie Lieferung in CHF/kWh)
 
 ## todo
 - Berücksichtige den Wirkungsgrad der Battere
