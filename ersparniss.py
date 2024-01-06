@@ -37,15 +37,15 @@ if __name__ == '__main__':
     if provider == "bkw":
         from read_data_bkw import get_timserie as timeserie
 
-        file_path = 'data/Werte Eggenstrasse  3 Walperswil.xlsx'  ## Bezung und Lieferung
-        sheet_name0 = 'Einspeisung Überschuss'
-        sheet_name1 = 'Strombezug aus BKW-Netz'
+        file_path = 'data/2-werte-messpunkte.xlsx'
+        sheet_name0 = 'Einspeisung Überschuss'   ## Lieferung
+        sheet_name1 = 'Strombezug aus BKW-Netz'  ## Bezung
     else:
         ## neovac
         from read_data_neovac import get_timserie as timeserie
 
-        file_path = 'data/2-weg-messpunkt.xlsx'  ## Bezung und Lieferung
-        sheet_name0 = 'tab1'
+        file_path = 'data/2-weg-messpunkt.xlsx'
+        sheet_name0 = 'tab1'                    ## Bezung und Lieferung
         sheet_name1 = None
 
     timesrie_lieferung, timeserie_bezug, timeserie_ts = timeserie(file_path, sheet_name0, sheet_name1)
