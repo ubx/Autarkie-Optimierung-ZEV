@@ -23,10 +23,3 @@ def get_timserie(file_path, sheet_name_lieferung, sheet_name_bezug):
         timserie_lieferung.append(row_liferung[2])
         timserie_ts.append(datetime.combine(row_bezug[0], row_bezug[1]))
     return timserie_lieferung, timserie_bezug, timserie_ts
-
-
-if __name__ == '__main__':
-    timserie_lieferung, timserie_bezug, timserie_ts = (
-        get_timserie("data/Werte Eggenstrasse  3 Walperswil.xlsx", "Einspeisung Überschuss",
-                     "Strombezug aus BKW-Netz"))
-    pass
