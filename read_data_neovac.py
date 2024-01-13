@@ -12,7 +12,7 @@ def read_excel_data(file_path, sheet_name):
         print(f"An error occurred: {e}")
 
 
-def get_timserie(file_path, sheet_name, sheet_name_dummy=None):
+def get_timserie(file_path, sheet_name, sheet_name1_dummy=None, sheet_name2_dummy=None):
     timserie_bezug = []
     timserie_lieferung = []
     timserie_ts = []
@@ -28,7 +28,7 @@ def get_timserie(file_path, sheet_name, sheet_name_dummy=None):
             timserie_ts.append(row[0])
         last_bezung = row[1]
         last_lieferung = row[2]
-    return timserie_lieferung, timserie_bezug, timserie_ts
+    return timserie_lieferung, timserie_bezug, timserie_ts, None
 
 
 if __name__ == '__main__':

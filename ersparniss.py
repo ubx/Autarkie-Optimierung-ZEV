@@ -37,33 +37,36 @@ if __name__ == '__main__':
     if provider == "bkw":
         from read_data_bkw import get_timserie as timeserie
 
-        file_path = 'data/2-werte-messpunkte.xlsx'
-        sheet_name0 = 'Einspeisung Überschuss'   ## Lieferung
+        file_path = 'data/2-werte-messpunkte-wr.xlsx'
+        sheet_name0 = 'Einspeisung Überschuss'  ## Lieferung
         sheet_name1 = 'Strombezug aus BKW-Netz'  ## Bezung
+        sheet_name2 = 'Eigenbedarf PVA'  ## Verbrauch PV-Anlage
     else:
         ## neovac
         from read_data_neovac import get_timserie as timeserie
 
         file_path = 'data/2-weg-messpunkt.xlsx'
-        sheet_name0 = 'tab1'                    ## Bezung und Lieferung
+        sheet_name0 = 'tab1'  ## Bezung und Lieferung
         sheet_name1 = None
+        sheet_name2 = None
 
-    timesrie_lieferung, timeserie_bezug, timeserie_ts = timeserie(file_path, sheet_name0, sheet_name1)
+    timesrie_lieferung, timeserie_bezug, timeserie_ts, timeserie_wr = timeserie(file_path, sheet_name0, sheet_name1,
+                                                                                sheet_name2)
 
     tarif_bezung = 0.3027  # Tarif für Bezug in CHF/kWh 2024 (https://www.strompreis.elcom.admin.ch/?category=H3)
     tarif_lieferung = 0.0824  # Tarif für Lieferung in CHF/kWh, 2023 (4.Q) mit HKN
     batterie_max_cap = 1.0  # Maximale Kapazität der Batterie in kWh
     ersparnisse = 0.0
 
-    idx_begin = 0 if begin_time is None else min((i for i, val in enumerate(timeserie_ts) if val >= begin_time),
-                                                 default=None)
-    idx_end = -1 if end_time is None else max((i for i, val in enumerate(timeserie_ts) if val <= end_time),
-                                              default=None)
+    idx_begin = 0 if begin_time is None else min((i for i, val in enumerate(timeserie_ts) if val >= begin_time))
+    idx_end = -1 if end_time is None else max((i for i, val in enumerate(timeserie_ts) if val <= end_time))
     timesrie_lieferung = timesrie_lieferung[idx_begin:idx_end]
     timeserie_bezug = timeserie_bezug[idx_begin:idx_end]
 
     print(f"Data from: {provider} / {von_bis(timeserie_ts[idx_begin], timeserie_ts[idx_end])}")
     print(f"Total Bezug: {sum(timeserie_bezug):.2f} kWh / Total Lieferung: {sum(timesrie_lieferung):.2f} kWh")
+    if timeserie_wr is not None:
+        print(f"Total Bezug WR: {sum(timeserie_wr[idx_begin:idx_end]):.2f} kWh")
 
     # todo -- Consider charging and discharging losses
     while True:
