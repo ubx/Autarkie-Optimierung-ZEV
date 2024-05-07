@@ -41,14 +41,15 @@ if __name__ == '__main__':
         sheet_name0 = 'Einspeisung Überschuss'  ## Lieferung
         sheet_name1 = 'Strombezug aus BKW-Netz'  ## Bezung
         sheet_name2 = 'Eigenbedarf PVA'  ## Verbrauch PV-Anlage
-    else:
-        ## neovac
+    elif provider == "neovac" :
         from read_data_neovac import get_timserie as timeserie
 
         file_path = 'data/2-weg-messpunkt.xlsx'
         sheet_name0 = 'tab1'  ## Bezung und Lieferung
         sheet_name1 = None
         sheet_name2 = None
+    else:
+        print(f"{provider} is not a valid provider")
 
     timesrie_lieferung, timeserie_bezug, timeserie_ts, timeserie_wr = timeserie(file_path, sheet_name0, sheet_name1,
                                                                                 sheet_name2)
