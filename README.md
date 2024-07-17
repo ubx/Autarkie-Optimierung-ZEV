@@ -9,6 +9,8 @@ in Abhängigkeit von variablen Faktoren:
 3. Einspeisevergütung (Energie Lieferung in CHF/kWh)
 
 ## todo
-- Berücksichtige den Wirkungsgrad der Battere
-- Berücksichtige die max. Lade/Entladeleistung der Batterie
+- Tabelle mit Tarifen für Einspeisung und Bezug pro Periode (Quartal)
+- Config file (json) anstelle von args mit Dataset und Tarifen
+- Berücksichtige den Wirkungsgrad des Akkus
+- Berücksichtige die max. Lade/Entladeleistung des Akkus
 
